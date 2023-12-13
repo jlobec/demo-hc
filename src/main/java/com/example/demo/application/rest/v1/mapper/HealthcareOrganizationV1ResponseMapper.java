@@ -1,6 +1,7 @@
 package com.example.demo.application.rest.v1.mapper;
 
 import com.example.demo.application.rest.v1.response.affiliation.AffiliateV1Response;
+import com.example.demo.application.rest.v1.response.hco.HealthcareOrganizationBaseV1Response;
 import com.example.demo.application.rest.v1.response.hco.HealthcareOrganizationV1Response;
 import com.example.demo.domain.Affiliable;
 import com.example.demo.domain.HealthcareOrganization;
@@ -24,10 +25,23 @@ public class HealthcareOrganizationV1ResponseMapper {
         return mapToHcoV1Responses(hcos);
     }
 
+    public static List<HealthcareOrganizationBaseV1Response> toHcoBaseV1Responses(List<HealthcareOrganization> hcos) {
+        return mapToHcoBaseV1Responses(hcos);
+    }
+
     private static List<HealthcareOrganizationV1Response> mapToHcoV1Responses(List<HealthcareOrganization> hcos) {
         if (!Objects.isNull(hcos)) {
             return hcos.stream()
                     .map(HealthcareOrganizationV1ResponseMapper::mapToHcoV1Response)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    private static List<HealthcareOrganizationBaseV1Response> mapToHcoBaseV1Responses(List<HealthcareOrganization> hcos) {
+        if (!Objects.isNull(hcos)) {
+            return hcos.stream()
+                    .map(HealthcareOrganizationV1ResponseMapper::mapToHcoBaseV1Response)
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
@@ -41,6 +55,18 @@ public class HealthcareOrganizationV1ResponseMapper {
                     hco.getStatus().toString().toLowerCase(),
                     AddressV1ResponseMapper.toAddressV1Response(hco.getActiveAddress()),
                     AffiliationV1ResponseMapper.toAffiliationV1Responses(hco.getAffiliations()));
+        }
+
+        return null;
+    }
+
+    private static HealthcareOrganizationBaseV1Response mapToHcoBaseV1Response(HealthcareOrganization hco) {
+        if (!Objects.isNull(hco)) {
+            return new HealthcareOrganizationBaseV1Response(
+                    hco.getId(),
+                    hco.getName(),
+                    hco.getStatus().toString().toLowerCase(),
+                    AddressV1ResponseMapper.toAddressV1Response(hco.getActiveAddress()));
         }
 
         return null;
