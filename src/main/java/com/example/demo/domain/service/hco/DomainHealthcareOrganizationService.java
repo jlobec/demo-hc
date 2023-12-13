@@ -47,7 +47,7 @@ public class DomainHealthcareOrganizationService implements HealthcareOrganizati
                 name,
                 HealthcareOrganizationEntityMapper.toHcoEntityStatus(status)
         );
-        var hcos = HealthcareOrganizationEntityMapper.toHcosLight(hcoEntities);
+        var hcos = HealthcareOrganizationEntityMapper.toHcos(hcoEntities);
         return hcos;
     }
 }

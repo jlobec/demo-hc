@@ -1,6 +1,7 @@
 package com.example.demo.application.rest.v1.mapper;
 
 import com.example.demo.application.rest.v1.response.affiliation.AffiliateV1Response;
+import com.example.demo.application.rest.v1.response.hcp.HealthcareProviderBaseV1Response;
 import com.example.demo.application.rest.v1.response.hcp.HealthcareProviderV1Response;
 import com.example.demo.domain.Affiliable;
 import com.example.demo.domain.HealthcareProvider;
@@ -24,6 +25,19 @@ public class HealthcareProviderV1ResponseMapper {
         return mapToHcpExtendedV1Responses(hcps);
     }
 
+    public static List<HealthcareProviderBaseV1Response> toHcpBaseV1Responses(List<HealthcareProvider> hcps) {
+        return mapToHcpBaseExtendedV1Responses(hcps);
+    }
+
+    private static List<HealthcareProviderBaseV1Response> mapToHcpBaseExtendedV1Responses(List<HealthcareProvider> hcps) {
+        if (!Objects.isNull(hcps)) {
+            return hcps.stream()
+                    .map(HealthcareProviderV1ResponseMapper::mapToHcpBaseV1Response)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
     private static List<HealthcareProviderV1Response> mapToHcpExtendedV1Responses(List<HealthcareProvider> hcps) {
         if (!Objects.isNull(hcps)) {
             return hcps.stream()
@@ -31,6 +45,18 @@ public class HealthcareProviderV1ResponseMapper {
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+    private static HealthcareProviderBaseV1Response mapToHcpBaseV1Response(HealthcareProvider hcp) {
+        if (!Objects.isNull(hcp)) {
+            return new HealthcareProviderBaseV1Response(
+                    hcp.getId(),
+                    hcp.getName(),
+                    hcp.getStatus().toString().toLowerCase(),
+                    AddressV1ResponseMapper.toAddressV1Response(hcp.getActiveAddress()));
+        }
+
+        return null;
     }
 
     private static HealthcareProviderV1Response mapToHcpV1Response(HealthcareProvider hcp) {

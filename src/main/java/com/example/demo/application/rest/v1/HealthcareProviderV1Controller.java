@@ -7,6 +7,7 @@ import com.example.demo.application.rest.v1.response.address.AddressV1Response;
 import com.example.demo.application.rest.v1.response.address.AddressV1ResponseCollection;
 import com.example.demo.application.rest.v1.response.affiliation.AffiliationV1Response;
 import com.example.demo.application.rest.v1.response.affiliation.AffiliationV1ResponseCollection;
+import com.example.demo.application.rest.v1.response.hcp.HealthcareProviderBaseV1Response;
 import com.example.demo.application.rest.v1.response.hcp.HealthcareProviderBaseV1ResponseCollection;
 import com.example.demo.application.rest.v1.response.hcp.HealthcareProviderV1Response;
 import com.example.demo.application.rest.v1.validation.RequestParamsValidator;
@@ -106,16 +107,16 @@ public class HealthcareProviderV1Controller {
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content)})
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Collection<HealthcareProviderV1Response>> getByCriteria(@RequestParam(required = false) Integer id,
-                                                                           @RequestParam(required = false) String name,
-                                                                           @RequestParam(required = false) String status) {
+    ResponseEntity<Collection<HealthcareProviderBaseV1Response>> getByCriteria(@RequestParam(required = false) Integer id,
+                                                                               @RequestParam(required = false) String name,
+                                                                               @RequestParam(required = false) String status) {
 
         if (!RequestParamsValidator.isValidStatus(status)) {
             return ResponseEntity.badRequest().build();
         }
 
         var hcps = hcpService.findByIdNameOrStatus(id, name, HealthcareProviderStatus.of(status));
-        var hcpsResponse = HealthcareProviderV1ResponseMapper.toHcpV1Responses(hcps);
+        var hcpsResponse = HealthcareProviderV1ResponseMapper.toHcpBaseV1Responses(hcps);
         return ResponseEntity.ok(hcpsResponse);
     }
 }

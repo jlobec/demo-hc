@@ -7,6 +7,7 @@ import com.example.demo.application.rest.v1.response.address.AddressV1Response;
 import com.example.demo.application.rest.v1.response.address.AddressV1ResponseCollection;
 import com.example.demo.application.rest.v1.response.affiliation.AffiliationV1Response;
 import com.example.demo.application.rest.v1.response.affiliation.AffiliationV1ResponseCollection;
+import com.example.demo.application.rest.v1.response.hco.HealthcareOrganizationBaseV1Response;
 import com.example.demo.application.rest.v1.response.hco.HealthcareOrganizationBaseV1ResponseCollection;
 import com.example.demo.application.rest.v1.response.hco.HealthcareOrganizationV1Response;
 import com.example.demo.application.rest.v1.validation.RequestParamsValidator;
@@ -106,16 +107,16 @@ public class HealthcareOrganizationV1Controller {
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content)})
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Collection<HealthcareOrganizationV1Response>> getByCriteria(@RequestParam(required = false) Integer id,
-                                                                               @RequestParam(required = false) String name,
-                                                                               @RequestParam(required = false) String status) {
+    ResponseEntity<Collection<HealthcareOrganizationBaseV1Response>> getByCriteria(@RequestParam(required = false) Integer id,
+                                                                                   @RequestParam(required = false) String name,
+                                                                                   @RequestParam(required = false) String status) {
 
         if (!RequestParamsValidator.isValidStatus(status)) {
             return ResponseEntity.badRequest().build();
         }
 
         var hcos = hcoService.findByIdNameOrStatus(id, name, HealthcareOrganizationStatus.of(status));
-        var hcosResponse = HealthcareOrganizationV1ResponseMapper.toHcoV1Responses(hcos);
+        var hcosResponse = HealthcareOrganizationV1ResponseMapper.toHcoBaseV1Responses(hcos);
         return ResponseEntity.ok(hcosResponse);
     }
 }
